@@ -98,10 +98,10 @@ full_list_class_values_test = []
 for i in range(0,data_test.shape[0]):
 	local_list_class_values =[]
 	for j in range(0,len(unq_lbls)):
-		q = List_Prior_Prob[j]
+		
 		w = 1/(((2*np.pi)**data_train.shape[1])*((np.linalg.det(C_matrix))**0.5))	
-		r = reduce(np.dot, [ np.transpose(data_test[i]-global_mean),C_inv,data_test[i]-global_mean])
-		x = q*w*np.exp(-0.5*r)
+		r = reduce(np.dot, [ np.transpose(data_test[i]-mean_matrix[j]),C_inv,data_test[i]-mean_matrix[j]])
+		x = w*np.exp(-0.5*r)
 		print ('%f'%x)
 		local_list_class_values.append(x)
 	pass
