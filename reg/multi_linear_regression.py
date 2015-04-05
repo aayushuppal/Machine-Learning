@@ -36,5 +36,13 @@ e = 0;
 for i in range(len(Y2)):
 	e = e + ((Y2[i]-true_label_test[i])**2)
 pass
-e = e/len(Y2)
 e = np.sqrt(e)
+e = e/len(Y2)
+
+print e
+
+#Y2.resize(1,200)
+#true_label_test.resize(1,200)
+i = np.arange(0, 200, 1)
+plt.plot(i, Y2, 'r^', i,true_label_test, 'b^')
+plt.show()
