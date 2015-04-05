@@ -9,12 +9,6 @@ import pickle
 
 
 dict = pickle.load(open('sample.pickle'));
-'''
-data_train = np.array([[2.95,6.63],[2.53,7.79],[3.57,5.65],[3.16,5.47],[2.58,4.46],[2.16,6.22],[3.27,3.52]])
-true_label_train = np.array([[1.0],[1.0],[1.0],[1.0],[2.0],[2.0],[2.0]])
-data_test = np.array([[2.81,5.46]]) #data_train#
-true_label_test = np.array([[2.0]]) #true_label_train#
-'''
 data_train = dict[0];           # 242X64
 true_label_train = dict[1];     # 242X1
 data_test = dict[2];            # 200X64
@@ -73,24 +67,16 @@ for i in range(len(mean_corrected_ftrs_list)):
 list_classwise_num_of_ftrs = []
 list_classwise_covar = []
 for i in range(0,len(mean_corrected_ftrs_list)):
-	x = np.dot(np.transpose(mean_corrected_ftrs_list[i]),mean_corrected_ftrs_list[i])/mean_corrected_ftrs_list[i].shape[0]
 	list_classwise_num_of_ftrs.append(mean_corrected_ftrs_list[i].shape[0])
-	list_classwise_covar.append(x);
+	list_classwise_covar.append(np.cov(np.transpose(mean_corrected_ftrs_list[i])));
 pass
 
-
-C_matrix = np.zeros(shape=(data_train.shape[1],data_train.shape[1]));
-for i in range(0,len(list_classwise_covar)):
-	C_matrix = C_matrix+list_classwise_covar[i]*list_classwise_num_of_ftrs[i]/data_train.shape[0]
-pass
 
 print("\n------covar data-----")
 for i in range(len(list_classwise_covar)):
 	print('\nclass %s -\n %s'%(unq_lbls[i],list_classwise_covar[i]))
 pass
-print('\n final covariance \n %s'%(C_matrix))
-C_inv = np.linalg.inv(C_matrix)
-print('\n covariance inverse \n %s'%(C_inv))
+
 
 List_Prior_Prob = []
 for i in range(0,len(list_classwise_num_of_ftrs)):
@@ -115,10 +101,17 @@ full_list_class_values_test = []
 for i in range(0,data_test.shape[0]):
 	local_list_class_values =[]
 	for j in range(0,len(unq_lbls)):
+		
+		w = 1/(((2*np.pi)**data_train.shape[1])*((np.linalg.det(list_classwise_covar[j]))**0.5))	
+		r = reduce(np.dot, [ np.transpose(data_test[i]-mean_matrix[j]),np.linalg.inv(list_classwise_covar[j]),data_test[i]-mean_matrix[j]])
+		x = w*np.exp(-0.5*r)
+		
+		''' discrete QDA
 		a = 0.5*np.log(np.linalg.det(list_classwise_covar[j]))
 		b = 0.5*reduce(np.dot, [ np.transpose(data_test[i]-mean_matrix[j]),np.linalg.inv(list_classwise_covar[j]),data_test[i]-mean_matrix[j]])
 		c = np.log(np.pi)
 		x = -a-b+c
+		'''
 		print ('%f'%x)
 		local_list_class_values.append(x)
 	pass
