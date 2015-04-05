@@ -102,7 +102,7 @@ for i in range(0,data_test.shape[0]):
 	local_list_class_values =[]
 	for j in range(0,len(unq_lbls)):
 		
-		w = 1/(((2*np.pi)**data_train.shape[1])*((np.linalg.det(list_classwise_covar[j]))**0.5))	
+		w = 1/(((2*np.pi)**data_train.shape[1])*((np.linalg.det(list_classwise_covar[j]))**2))	
 		r = reduce(np.dot, [ np.transpose(data_test[i]-mean_matrix[j]),np.linalg.inv(list_classwise_covar[j]),data_test[i]-mean_matrix[j]])
 		x = w*np.exp(-0.5*r)
 		
@@ -179,7 +179,7 @@ plt.figure(1)
 plt.subplot(211)
 for i in range(1,6):
     plt.scatter(data_test[(new_lbl==i).reshape((new_lbl==i).size),0],data_test[(new_lbl==i).reshape((new_lbl==i).size),1],color=next(colors))
-plt.title('QDA classification plot - 95%')
+plt.title('QDA classification plot - 97%')
 
 
 colors = iter(cm.rainbow(np.linspace(0,1,5)))

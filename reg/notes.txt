@@ -1,0 +1,1 @@
+1. the point of linear regression is to minimize sum of squared errors between actual y values and predicted y value.
